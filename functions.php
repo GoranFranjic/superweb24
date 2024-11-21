@@ -19,11 +19,23 @@ function display_product_categories_thumbnails() {
             $image_url = wp_get_attachment_image_url( $thumbnail_id, 'thumbnail' );
             $category_link = get_term_link( $cat );
 
+            // Dodajte direktni URL slike za malu ikonu (bez potrebe za prilagođenim poljem)
+            $custom_image = 'https://superweb24.eu/wp-content/uploads/2024/11/webpopust.gif'; // URL vaše male slike
+
             echo '<div class="product-category-thumbnail">';
             echo '<a href="' . esc_url( $category_link ) . '">';
+            
+            // Prikaz glavne slike kategorije
             if ( $image_url ) {
                 echo '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $cat->name ) . '">';
             }
+
+            // Prikaz male slike u gornjem desnom kutu
+            if ( $custom_image ) {
+                echo '<img class="custom-icon" src="' . esc_url($custom_image) . '" alt="Ikona za ' . esc_attr( $cat->name ) . '">';
+            }
+
+            // Naziv kategorije
             echo '<h3>' . esc_html( $cat->name ) . '</h3>';
             echo '</a>';
             echo '</div>';
