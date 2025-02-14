@@ -19,23 +19,11 @@ function display_product_categories_thumbnails() {
             $image_url = wp_get_attachment_image_url( $thumbnail_id, 'thumbnail' );
             $category_link = get_term_link( $cat );
 
-            // Dodajte direktni URL slike za malu ikonu (bez potrebe za prilagođenim poljem)
-            $custom_image = 'https://superweb24.eu/wp-content/uploads/2024/11/webpopust.gif'; // URL vaše male slike
-
             echo '<div class="product-category-thumbnail">';
             echo '<a href="' . esc_url( $category_link ) . '">';
-            
-            // Prikaz glavne slike kategorije
             if ( $image_url ) {
                 echo '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $cat->name ) . '">';
             }
-
-            // Prikaz male slike u gornjem desnom kutu
-            if ( $custom_image ) {
-                echo '<img class="custom-icon" src="' . esc_url($custom_image) . '" alt="Ikona za ' . esc_attr( $cat->name ) . '">';
-            }
-
-            // Naziv kategorije
             echo '<h3>' . esc_html( $cat->name ) . '</h3>';
             echo '</a>';
             echo '</div>';
@@ -47,6 +35,42 @@ function display_product_categories_thumbnails() {
 }
 add_shortcode('product_categories_thumbnails', 'display_product_categories_thumbnails');
 
+
+
+function display_product_categories_thumbnails2() {
+    ob_start();
+    
+    // Popis ID-ova kategorija koje želite isključiti
+    $excluded_categories = array(75, 63, 78, 71, 67, 70, 74, 76, 66, 61, 72, 68, 69, 62, 73, 77, 56); // Promijeni ID za druge kategorije
+
+    $categories = get_terms( array(
+        'taxonomy'   => 'product_cat',
+        'hide_empty' => false,
+        'exclude'    => $excluded_categories,
+    ) );
+
+    if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
+        echo '<div class="product-categories-grid">';
+        foreach ( $categories as $cat ) {
+            $thumbnail_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
+            $image_url = wp_get_attachment_image_url( $thumbnail_id, 'thumbnail' );
+            $category_link = get_term_link( $cat );
+
+            echo '<div class="product-category-thumbnail">';
+            echo '<a href="' . esc_url( $category_link ) . '">';
+            if ( $image_url ) {
+                echo '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $cat->name ) . '">';
+            }
+            echo '<h3>' . esc_html( $cat->name ) . '</h3>';
+            echo '</a>';
+            echo '</div>';
+        }
+        echo '</div>';
+    }
+
+    return ob_get_clean();
+}
+add_shortcode('product_categories_thumbnails2', 'display_product_categories_thumbnails2');
 /**
  * Woostify
  *
